@@ -15,8 +15,8 @@ RUN npm ci
 # Copier le code source
 COPY . .
 
-# Build de l'application
-RUN npm run build
+# Build de l'application (client-side only pour nginx)
+RUN npm run build:docker
 
 # Étape 2 : Serveur web avec nginx
 FROM nginx:alpine
