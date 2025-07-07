@@ -178,6 +178,20 @@ describe('RegisterComponent', () => {
         jasmine.any(Object)
       );
     });
+
+    it('should set loading to false on error', () => {
+      authService.register.and.returnValue(throwError(() => new Error('Registration failed')));
+      component.user = { 
+        username: 'testuser', 
+        email: 'test@example.com', 
+        password: 'password' 
+      };
+
+      component.onRegister();
+
+      expect(component.loading).toBe(false);
+      expect(cdr.detectChanges).toHaveBeenCalled();
+    });
   });
 
   describe('Navigation', () => {

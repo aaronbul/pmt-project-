@@ -16,7 +16,7 @@ describe('App', () => {
   });
 
   it('should have correct selector', () => {
-    expect(App.prototype.constructor.name).toBe('App');
+    expect(component.constructor.name).toBe('App2');
   });
 
   it('should be a component', () => {

@@ -231,7 +231,9 @@ export class DashboardComponent implements OnInit {
   }
 
   toggleSidenav(): void {
-    this.drawer.toggle();
+    if (this.drawer) {
+      this.drawer.toggle();
+    }
   }
 
   closeSidenav(): void {

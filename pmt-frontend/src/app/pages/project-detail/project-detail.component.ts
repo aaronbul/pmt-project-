@@ -300,4 +300,8 @@ export class ProjectDetailComponent implements OnInit {
       this.router.navigate(['/dashboard/tasks', taskId, 'edit']);
     }
   }
+
+  navigateBack(): void {
+    this.router.navigate(['/dashboard/projects']);
+  }
 } 

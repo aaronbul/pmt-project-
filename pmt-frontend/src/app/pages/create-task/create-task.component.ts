@@ -323,7 +323,10 @@ export class CreateTaskComponent implements OnInit {
     }, 0);
   }
 
-  private formatDateForBackend(date: Date): string {
+  private formatDateForBackend(date: Date | null): string {
+    if (!date) {
+      return '';
+    }
     // Utiliser le fuseau horaire local pour éviter le décalage
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');

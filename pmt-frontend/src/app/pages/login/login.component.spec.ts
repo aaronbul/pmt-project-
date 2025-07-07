@@ -64,14 +64,20 @@ describe('LoginComponent', () => {
       );
     });
 
-    it('should handle login error gracefully', () => {
+    it('should handle login error', () => {
       authService.login.and.returnValue(throwError(() => new Error('Login failed')));
-      spyOn(console, 'error');
       component.loginRequest = { email: 'test@example.com', password: 'wrong' };
+
       component.onLogin();
+
       expect(authService.login).toHaveBeenCalled();
       expect(component.loading).toBe(false);
-      expect(snackBar.open).toHaveBeenCalledWith('Erreur de connexion', 'Fermer', { duration: 3000 });
+      expect(snackBar.open).toHaveBeenCalledWith('Email ou mot de passe incorrect', 'Fermer', jasmine.objectContaining({
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+        panelClass: ['error-snackbar']
+      }));
     });
 
     it('should show error for empty fields', () => {
