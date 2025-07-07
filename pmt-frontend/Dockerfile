@@ -16,7 +16,7 @@ RUN npm ci
 COPY . .
 
 # Build de l'application (client-side only pour nginx)
-RUN npm run build:docker
+RUN npx ng build --configuration production
 
 # Étape 2 : Serveur web avec nginx
 FROM nginx:alpine
