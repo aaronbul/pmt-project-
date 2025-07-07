@@ -59,9 +59,6 @@ jobs:
         mvn clean test jacoco:report
       env:
         SPRING_PROFILES_ACTIVE: test
-        SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/pmt_test_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-        SPRING_DATASOURCE_USERNAME: test_user
-        SPRING_DATASOURCE_PASSWORD: test_password
 
     - name: Upload backend test results
       uses: actions/upload-artifact@v4
