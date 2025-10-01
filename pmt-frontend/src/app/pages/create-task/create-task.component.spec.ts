@@ -189,7 +189,7 @@ describe('CreateTaskComponent', () => {
 
     it('should show success message', () => {
       (component as any).showMessage('Success message', 'success');
-      
+
       // Le message est affiché avec setTimeout, donc on ne peut pas le tester directement
       // expect(snackBar.open).toHaveBeenCalledWith(
       //   'Success message',
@@ -205,7 +205,7 @@ describe('CreateTaskComponent', () => {
 
     it('should show error message', () => {
       (component as any).showMessage('Error message', 'error');
-      
+
       // Le message est affiché avec setTimeout, donc on ne peut pas le tester directement
       // expect(snackBar.open).toHaveBeenCalledWith(
       //   'Error message',

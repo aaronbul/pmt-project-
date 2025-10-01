@@ -232,7 +232,7 @@ export class DashboardComponent implements OnInit {
 
   toggleSidenav(): void {
     if (this.drawer) {
-      this.drawer.toggle();
+    this.drawer.toggle();
     }
   }
 

@@ -244,11 +244,11 @@ describe('EditTaskComponent', () => {
 
       // Test un seul statut pour éviter les conflits
       component.taskStatus = 'IN_PROGRESS';
-      component.onSubmit();
+        component.onSubmit();
 
-      expect(taskService.updateTask).toHaveBeenCalledWith(1, jasmine.objectContaining({
+        expect(taskService.updateTask).toHaveBeenCalledWith(1, jasmine.objectContaining({
         status: { name: 'IN_PROGRESS' }
-      }));
+        }));
     });
   });
 
@@ -307,7 +307,7 @@ describe('EditTaskComponent', () => {
   describe('Message Display', () => {
     it('should show success message', () => {
       (component as any).showMessage('Success message', 'success');
-      
+
       // Le message est affiché avec setTimeout, donc on ne peut pas le tester directement
       // expect(snackBar.open).toHaveBeenCalledWith(
       //   'Success message',
@@ -323,7 +323,7 @@ describe('EditTaskComponent', () => {
 
     it('should show error message', () => {
       (component as any).showMessage('Error message', 'error');
-      
+
       // Le message est affiché avec setTimeout, donc on ne peut pas le tester directement
       // expect(snackBar.open).toHaveBeenCalledWith(
       //   'Error message',

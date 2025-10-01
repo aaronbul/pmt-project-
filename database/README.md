@@ -1,96 +1,105 @@
-# Base de données PMT
+# Initialisation de la Base de Données PMT
 
-## 📋 Description
+## Vue d'ensemble
 
-Ce dossier contient tous les scripts SQL nécessaires pour initialiser et peupler la base de données de l'application PMT (Project Management Tool).
+La base de données MySQL est automatiquement initialisée lors du premier démarrage de l'application via Docker Compose.
 
-## 📁 Fichiers
+## Fichiers d'initialisation
 
-- `init.sql` - Script complet d'initialisation (structure + données)
-- `schema.sql` - Structure de la base de données uniquement
-- `data.sql` - Données de test uniquement
-- `generate-passwords.sql` - Script pour corriger les mots de passe
-- `init-phpmyadmin.sql` - Version compatible phpMyAdmin
+### `init.sql`
+Ce fichier contient :
+- Création de toutes les tables nécessaires
+- Insertion des données de référence (rôles, statuts)
+- Création des utilisateurs de test
+- Création des projets de test
+- Création des tâches de test
+- Insertion des données d'historique et notifications
 
-## 🔐 Mots de passe
+## Processus d'initialisation automatique
 
-**Tous les utilisateurs de test ont le mot de passe : `password123`**
+1. **Démarrage MySQL** : Le conteneur MySQL démarre
+2. **Exécution automatique** : Le fichier `init.sql` est automatiquement exécuté via le volume monté dans `/docker-entrypoint-initdb.d/`
+3. **Base prête** : La base de données est immédiatement utilisable avec toutes les données de test
 
-### Utilisateurs de test disponibles :
+## Données de test incluses
 
-1. **John Doe** - `john.doe@example.com` (Admin)
-2. **Mariana Silva** - `mariana.silva@example.com` (Admin)
-3. **Nicolas Martin** - `nicolas.martin@example.com` (Admin)
-4. **Alice Dupont** - `alice.dupont@example.com` (Member)
-5. **Bob Wilson** - `bob.wilson@example.com` (Member)
+### Utilisateurs
+- `john.doe` / `password123` (Admin)
+- `mariana.silva` / `password123` (Membre)
+- `nicolas.martin` / `password123` (Membre)
+- `alice.dupont` / `password123` (Observateur)
+- `bob.wilson` / `password123` (Membre)
 
-## 🚀 Installation
+### Rôles
+- `ADMIN` : Accès complet au projet
+- `MEMBER` : Peut créer et modifier des tâches
+- `OBSERVER` : Lecture seule
 
-### Option 1 : Script complet
-```sql
--- Exécuter le fichier init.sql dans votre client MySQL
-source init.sql;
-```
+### Statuts de tâches
+- `TODO` : À faire
+- `IN_PROGRESS` : En cours
+- `REVIEW` : En révision
+- `DONE` : Terminé
+- `CANCELLED` : Annulé
 
-### Option 2 : Via phpMyAdmin
-1. Créer une base de données `pmt_db`
-2. Importer le fichier `init-phpmyadmin.sql`
+### Projets de test
+1. **PMT - Project Management Tool**
+   - Description : Développement d'une plateforme de gestion de projet collaboratif
+   - Créé par : john.doe
+   - Membres : 4 utilisateurs avec différents rôles
 
-### Option 3 : Ligne de commande
+2. **E-commerce Platform**
+   - Description : Création d'une plateforme e-commerce moderne
+   - Créé par : mariana.silva
+   - Membres : 3 utilisateurs
+
+3. **Mobile App Redesign**
+   - Description : Refonte complète de l'application mobile
+   - Créé par : nicolas.martin
+   - Membres : 3 utilisateurs
+
+## Réinitialisation
+
+Pour réinitialiser complètement la base de données :
+
 ```bash
-mysql -u root -p < init.sql
+# Arrêter les conteneurs
+docker-compose down
+
+# Supprimer le volume de données
+docker-compose down -v
+
+# Redémarrer
+docker-compose up -d
 ```
 
-## 🔧 Correction des mots de passe
+## Accès à la base de données
 
-Si vous rencontrez des problèmes d'authentification avec les utilisateurs de test, exécutez le script de correction :
+### Via phpMyAdmin
+- URL : http://localhost:8081
+- Utilisateur : `pmt_user`
+- Mot de passe : `pmt_password`
 
-```sql
-source generate-passwords.sql;
+### Via ligne de commande
+```bash
+# Se connecter au conteneur MySQL
+docker exec -it pmt-mysql mysql -u pmt_user -p
+
+# Mot de passe : pmt_password
 ```
 
-## 📊 Structure de la base
+## Structure de la base de données
 
-- **users** - Utilisateurs de l'application
-- **projects** - Projets
-- **project_members** - Membres des projets avec leurs rôles
-- **tasks** - Tâches des projets
-- **task_status** - Statuts des tâches (TODO, IN_PROGRESS, etc.)
-- **task_history** - Historique des modifications de tâches
-- **notifications** - Notifications des utilisateurs
-- **roles** - Rôles (ADMIN, MEMBER, OBSERVER)
+Voir le fichier `schema.png` pour un aperçu visuel de la structure de la base de données.
 
-## 🧪 Données de test
+## Dépannage
 
-Le script inclut :
-- 5 utilisateurs de test
-- 3 projets de test
-- 11 tâches réparties sur les projets
-- Historique des modifications
-- Notifications de test
+### Problème : Base de données vide
+1. Vérifier que le fichier `init.sql` existe dans le dossier `database/`
+2. Vérifier les logs MySQL : `docker-compose logs mysql`
+3. Réinitialiser complètement : `docker-compose down -v && docker-compose up -d`
 
-## ⚠️ Notes importantes
-
-- Les mots de passe sont hashés avec BCrypt
-- Tous les utilisateurs de test utilisent le même hash pour `password123`
-- Les relations entre les entités sont préservées
-- Les contraintes d'intégrité référentielle sont respectées
-
-## Configuration Spring Boot
-
-Dans `application.properties` :
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/pmt_db
-spring.datasource.username=root
-spring.datasource.password=votre_mot_de_passe
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-spring.jpa.hibernate.ddl-auto=validate
-spring.jpa.show-sql=true
-```
-
-## Notes importantes
-
-- Les mots de passe sont hashés avec BCrypt
-- Les contraintes de clés étrangères sont configurées avec CASCADE appropriés
-- Les index sont créés pour optimiser les performances
-- La base de données utilise MySQL 8.0+ 
+### Problème : Erreurs d'initialisation
+1. Vérifier la syntaxe SQL dans `init.sql`
+2. Vérifier les logs MySQL pour les erreurs spécifiques
+3. S'assurer que MySQL a les permissions nécessaires 
